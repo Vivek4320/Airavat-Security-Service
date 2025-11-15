@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 // Optimized animation variants
 const fadeInUp = {
@@ -35,7 +34,6 @@ const staggerContainer = {
 };
 
 export default function Home() {
-  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [isLoading, setIsLoading] = useState(true);
@@ -117,13 +115,6 @@ export default function Home() {
   // Handle form submission
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    // Check if user is logged in
-    if (!isLoggedIn) {
-      alert('Please sign up or login first to send an enquiry');
-      router.push('/signup');
-      return;
-    }
     
     console.log('Form submitted:', formData);
     alert('Thank you for your enquiry! We will contact you soon.');
@@ -271,26 +262,6 @@ export default function Home() {
                   <span className={`absolute bottom-0 left-0 h-0.5 bg-[#040936] transition-all duration-300 ${activeSection === 'contact' ? 'w-full' : 'w-0 group-hover:w-full'
                     }`}></span>
                 </a>
-                
-                {/* Auth Buttons */}
-                {isLoggedIn ? (
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm text-gray-600">Welcome, <strong>{userName}</strong></span>
-                    <button
-                      onClick={handleLogout}
-                      className="px-4 py-2 bg-red-600 text-white rounded-lg font-semibold text-sm hover:bg-red-700 transition-all duration-300"
-                    >
-                      Logout
-                    </button>
-                  </div>
-                ) : (
-                  <Link
-                    href="/signup"
-                    className="px-4 py-2 bg-[#040936] text-white rounded-lg font-semibold text-sm hover:bg-[#0a1147] transition-all duration-300"
-                  >
-                    Sign Up
-                  </Link>
-                )}
               </div>
 
               {/* Mobile Menu Button */}
@@ -777,7 +748,7 @@ export default function Home() {
               </motion.div>
 
               <motion.div
-                className="grid md:grid-cols-3 gap-8"
+                className="grid md:grid-cols-3 gap-8 items-center"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: "-100px" }}
@@ -788,20 +759,22 @@ export default function Home() {
                     title: 'Handheld Metal Detectors',
                     desc: 'Professional-grade handheld metal detectors with trained operators for quick and reliable screening at entry points and security checkpoints.',
                     features: ['Pinpoint Detection', 'Adjustable Sensitivity', 'Audio & Vibration Alert', 'Lightweight & Portable'],
-                    image: '/MetalDetector.jpg',
+                    image: '/MetalDetector.png',
                     hasImage: true
                   },
                   {
                     title: 'Walk-Through Metal Detectors',
                     desc: 'High-sensitivity gate detectors for large-scale entry screening with multi-zone detection and real-time alarm indicators.',
                     features: ['Multi-Zone Detection', 'Auto Calibration', 'Visual & Audio Alarms', 'Weather Resistant'],
-                    hasImage: false
+                    image: '/GateMetalDetector.png',
+                    hasImage: true
                   },
                   {
                     title: 'Walkie Talkie Communication',
                     desc: 'Professional two-way radio communication systems for instant coordination between security personnel across large premises.',
                     features: ['Long Range Coverage', 'Crystal Clear Audio', 'Emergency Channels', 'Durable & Waterproof'],
-                    hasImage: false
+                    image: '/Walkie-Talkie.png',
+                    hasImage: true
                   }
                 ].map((equip, index) => (
                   <motion.div
@@ -814,48 +787,18 @@ export default function Home() {
                       <Image src="/Flag.png" alt="" fill className="object-contain" />
                     </div>
 
-                    {/* Equipment Image - For Metal Detector */}
+                    {/* Equipment Image - Rounded Shape */}
                     {equip.hasImage && equip.image && (
-                      <div className="mb-6 mt-4 rounded-lg overflow-hidden bg-linear-to-br from-gray-50 to-white p-4 border border-gray-200 group-hover:border-[#040936] transition-all duration-300">
-                        <Image
-                          src={equip.image}
-                          alt={equip.title}
-                          width={400}
-                          height={300}
-                          className="w-full h-48 object-contain group-hover:scale-105 transition-transform duration-500"
-                          priority
-                        />
-                      </div>
-                    )}
-
-                    {/* Icon - For other equipment without images */}
-                    {!equip.hasImage && (
-                      <div className="w-16 h-16 bg-[#040936] rounded-lg flex items-center justify-center mb-5 mx-auto group-hover:bg-[#0a1147] transition-colors duration-300 mt-4">
-                        <svg
-                          className="w-8 h-8 text-white"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          aria-hidden="true"
-                        >
-                          {index === 1 ? (
-                            // Walk-Through Detector Icon
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                            />
-                          ) : (
-                            // Walkie Talkie Icon
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"
-                            />
-                          )}
-                        </svg>
+                      <div className="mb-6 mt-4 flex items-center justify-center">
+                        <div className="relative w-56 h-56 rounded-full overflow-hidden bg-linear-to-br from-gray-50 to-gray-100 p-6 border-4 border-gray-200 group-hover:border-[#040936] transition-all duration-300 shadow-lg group-hover:shadow-2xl">
+                          <Image
+                            src={equip.image}
+                            alt={equip.title}
+                            fill
+                            className="object-contain p-4 group-hover:scale-110 transition-transform duration-500"
+                            priority
+                          />
+                        </div>
                       </div>
                     )}
 
@@ -1107,28 +1050,9 @@ export default function Home() {
                 <Image src="/Flag.png" alt="" fill className="object-contain" />
               </div>
 
-              <h3 className="text-2xl font-heading font-bold text-[#040936] mb-2 text-center tracking-tight pt-6">Send Enquiry</h3>
+              <h3 className="text-4xl font-heading font-bold text-[#040936] mb-2 text-center tracking-tight pt-6">Send Enquiry</h3>
               
-              {/* Signup Notice */}
-              {!isLoggedIn && (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-center">
-                  <p className="text-sm text-blue-800">
-                    <strong>Note:</strong> Please{' '}
-                    <Link href="/signup" className="text-[#040936] underline font-semibold hover:text-[#0a1147]">
-                      sign up
-                    </Link>
-                    {' '}or login first to send an enquiry
-                  </p>
-                </div>
-              )}
-              
-              {isLoggedIn && (
-                <p className="text-center text-green-700 bg-green-50 border border-green-200 rounded-lg py-2 px-4 mb-6 text-sm">
-                  ✓ You are logged in as <strong>{userName}</strong>
-                </p>
-              )}
-              
-              <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-4">
+              <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-4 pt-10">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="name" className="block text-[15px] font-semibold text-gray-700 mb-2">
@@ -1222,7 +1146,7 @@ export default function Home() {
                   type="submit"
                   className="w-full py-3.5 bg-[#040936] text-white rounded-lg font-semibold hover:bg-[#0a1147] transform hover:-translate-y-1 hover:shadow-lg focus:outline-none focus-visible:ring-4 focus-visible:ring-[#040936]/50 transition-all duration-300 text-[15px]"
                 >
-                  {isLoggedIn ? 'Submit Enquiry' : 'Sign Up to Submit Enquiry'}
+                  Submit Enquiry
                 </button>
               </form>
             </motion.div>
