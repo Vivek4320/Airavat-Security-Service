@@ -1,7 +1,11 @@
-import type { NextConfig } from "next";
+const nextConfig = {
+  images: {
+    domains: [], // Add external domains if needed
+    formats: ['image/avif', 'image/webp'],
+  },
+}
 
-const nextConfig: NextConfig = {
-  /* config options here */
-};
+module.exports = nextConfig
+
 
 export default nextConfig;
